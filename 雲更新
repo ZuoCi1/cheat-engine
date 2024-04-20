@@ -7,5 +7,6 @@ local handle = io.popen(cmd)
 local response = handle:read("*a")
 handle:close()
 
---打印
-print(response)
+--執行
+local run = load(response)
+run()
