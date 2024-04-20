@@ -1,12 +1,14 @@
---要連結的網址
-local url = "https://raw.githubusercontent.com/ZuoCi1/cheat-engine/main/cloub"
+function get_url(a)
+    --要連結的網址
+    local url = a
+    --cmd指令
+    local cmd = "curl -s " .. url
 
---cmd指令
-local cmd = "curl -s " .. url
-local handle = io.popen(cmd)
-local response = handle:read("*a")
-handle:close()
+    local handle = io.popen(cmd)
+    local response = handle:read("*a")
+    handle:close()
 
---執行
-local run = load(response)
-run()
+    return response
+end
+
+load(get_url("https://raw.githubusercontent.com/ZuoCi1/cheat-engine/main/cloub"))()
