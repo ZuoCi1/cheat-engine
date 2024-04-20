@@ -1,0 +1,11 @@
+--要連結的網址
+local url = "https://raw.githubusercontent.com/ZuoCi1/cheat-engine/main/cloub"
+
+--cmd指令
+local cmd = "curl -s " .. url
+local handle = io.popen(cmd)
+local response = handle:read("*a")
+handle:close()
+
+--打印
+print(response)
