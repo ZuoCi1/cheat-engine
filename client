@@ -22,6 +22,8 @@ end
 local zuoci_client = createForm(true)
 zuoci_client.Caption = "左慈輔助器"
 zuoci_client.Color = 0xFF8080
+zuoci_client.Left = 650
+zuoci_client.Top = 300
 zuoci_client.Height = 400
 zuoci_client.Width = 600
 
@@ -31,12 +33,12 @@ groupBox.Caption = "选择游戏模式"
 groupBox.Left = 10
 groupBox.Top = 10
 groupBox.Width = 150
-groupBox.Height = 150
+groupBox.Height = 110
 
 -- 创建下拉菜单
 local mode_comboBox = createComboBox(groupBox)
 mode_comboBox.Left = 10
-mode_comboBox.Top = 20
+mode_comboBox.Top = 10
 mode_comboBox.Width = 120
 mode_comboBox.Items.add("普通生存")
 mode_comboBox.Items.add("普通創造")
