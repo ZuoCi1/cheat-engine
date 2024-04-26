@@ -1,0 +1,65 @@
+-- 注入游戏
+function InjectGame()
+    local game = "MiniGameApp.exe"
+    local processID = getProcessIDFromProcessName(game)
+    if processID ~= nil then
+        openProcess(game)
+        showMessage("已成功注入迷你世界")
+    else
+        showMessage("错误：请先打开游戏再进行注入")
+    end
+end
+
+-- 修改游戏模式
+function GameMode(mode)
+    local address = "[libSandboxEngine.g_WorldMgr]+88"
+    if not writeInteger(address, mode) then
+        showMessage("請注入遊戲")
+    end
+end
+
+-- 创建表单
+local zuoci_client = createForm(true)
+zuoci_client.Caption = "左慈輔助器"
+zuoci_client.Color = 0xFF8080
+zuoci_client.Height = 400
+zuoci_client.Width = 600
+
+-- 创建 GroupBox
+local groupBox = createGroupBox(zuoci_client)
+groupBox.Caption = "选择游戏模式"
+groupBox.Left = 10
+groupBox.Top = 10
+groupBox.Width = 150
+groupBox.Height = 150
+
+-- 创建下拉菜单
+local mode_comboBox = createComboBox(groupBox)
+mode_comboBox.Left = 10
+mode_comboBox.Top = 20
+mode_comboBox.Width = 120
+mode_comboBox.Items.add("普通生存")
+mode_comboBox.Items.add("普通創造")
+mode_comboBox.Items.add("極限生存")
+mode_comboBox.Items.add("創造生存")
+mode_comboBox.Items.add("編輯模式")
+mode_comboBox.Items.add("玩法模式")
+mode_comboBox.Items.add("高級生存")
+
+-- 创建按钮用于执行选择的模式
+local mode_button = createButton(groupBox)
+mode_button.Caption = "修改"
+mode_button.Left = 10
+mode_button.Top = mode_comboBox.Top + mode_comboBox.Height + 10
+mode_button.Width = 75
+
+-- 当按钮被点击时的事件处理函数
+mode_button.OnClick = function()
+    local selectedModeIndex = mode_comboBox.ItemIndex
+    if selectedModeIndex >= 0 then
+        -- 执行选择的模式
+        GameMode(selectedModeIndex)
+    else
+        showMessage("请选择一个模式！")
+    end
+end
