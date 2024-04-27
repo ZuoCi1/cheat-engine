@@ -1,0 +1,102 @@
+-- 注入游戏
+function InjectGame()
+    local game = "MiniGameApp.exe"
+    local processID = getProcessIDFromProcessName(game)
+    if processID ~= nil then
+        openProcess(game)
+        showMessage("已成功注入迷你世界")
+    else
+        showMessage("错误：请先打开游戏再进行注入")
+    end
+end
+-- 修改游戏模式
+function GameMode(mode)
+    local address = "[libSandboxEngine.g_WorldMgr]+88"
+    if not writeInteger(address, mode) then
+        showMessage("请注入游戏")
+    end
+end
+-- 修改人物姿勢
+function PlayerMode(mode)
+    local address = "[libSandboxEngine.g_WorldMgr]+20C"
+    if not writeInteger(address, mode) then
+        showMessage("请注入游戏")
+    end
+end
+
+
+
+-- 创建表单
+local zuoci_client = createForm(true)
+zuoci_client.Caption = "左慈輔助器"
+zuoci_client.Color = 0xFF8080
+zuoci_client.Left = 650
+zuoci_client.Top = 300
+zuoci_client.Height = 400
+zuoci_client.Width = 600
+
+
+-- 创建 GroupBox
+local mode_groupBox = createGroupBox(zuoci_client)
+mode_groupBox.Caption = "选择游戏模式"
+mode_groupBox.Left = 10
+mode_groupBox.Top = 10
+mode_groupBox.Width = 105
+mode_groupBox.Height = 110
+-- 创建下拉菜单
+local mode_comboBox = createComboBox(mode_groupBox)
+mode_comboBox.Left = 10
+mode_comboBox.Top = 10
+mode_comboBox.Width = 75
+mode_comboBox.Items.add("普通生存")
+mode_comboBox.Items.add("普通創造")
+mode_comboBox.Items.add("極限生存")
+mode_comboBox.Items.add("創造生存")
+mode_comboBox.Items.add("編輯模式")
+mode_comboBox.Items.add("玩法模式")
+mode_comboBox.Items.add("高級生存")
+-- 创建按钮用于执行选择的模式
+local mode_button = createButton(mode_groupBox)
+mode_button.Caption = "修改"
+mode_button.Left = 10
+mode_button.Top = mode_comboBox.Top + mode_comboBox.Height + 10
+mode_button.Width = 75
+-- 当按钮被点击时的事件处理函数
+mode_button.OnClick = function()
+    local selectedModeIndex = mode_comboBox.ItemIndex
+    if selectedModeIndex >= 0 then
+        -- 执行选择的模式
+        GameMode(selectedModeIndex)
+    else
+        showMessage("请选择一个模式！")
+    end
+end
+
+
+-- 创建下拉菜单
+local PlayerMode_comboBox = createComboBox(zuoci_client)
+PlayerMode_comboBox.Left = mode_groupBox.Left + mode_groupBox.Width + 10
+PlayerMode_comboBox.ItemIndex = 0
+PlayerMode_comboBox.Top = 20
+PlayerMode_comboBox.Width = 75
+PlayerMode_comboBox.Items.add("正常")
+PlayerMode_comboBox.Items.add("坐下")
+PlayerMode_comboBox.Items.add("飛行")
+-- 创建按钮用于执行选择的模式
+local PlayerMode_button = createButton(zuoci_client)
+PlayerMode_button.Caption = "修改"
+PlayerMode_button.Left = PlayerMode_comboBox.Left
+PlayerMode_button.Top = PlayerMode_comboBox.Top + PlayerMode_comboBox.Height + 10
+PlayerMode_button.Width = 75
+-- 当按钮被点击时的事件处理函数
+PlayerMode_button.OnClick = function()
+    local selectedModeIndex = PlayerMode_comboBox.ItemIndex
+    -- 修改人物姿勢
+    if selectedModeIndex == 0 then
+        PlayerMode(0)
+    elseif selectedModeIndex == 1 then
+        PlayerMode(512)
+    else
+        PlayerMode(72)
+    end
+end
