@@ -1,0 +1,186 @@
+-- 注入游戏
+function InjectGame()
+    local game = "MiniGameApp.exe"
+    local processID = getProcessIDFromProcessName(game)
+    if processID ~= nil then
+        openProcess(game)
+        showMessage("已成功注入迷你世界")
+    else
+        showMessage("错误：请先打开游戏再进行注入")
+    end
+end
+-- 修改游戏模式
+function GameMode(mode)
+    local address = "[libSandboxEngine.g_WorldMgr]+88"
+    if not writeInteger(address, mode) then
+        showMessage("无法修改游戏模式")
+    end
+end
+
+-- 修改人物姿势
+function PlayerMode(mode)
+    local address = "[libSandboxEngine.g_pPlayerCtrl]+20C"
+    if not writeInteger(address, mode) then
+        showMessage("无法修改人物姿势")
+    end
+end
+
+
+
+-- 创建表單
+local zuoci_client = createForm(true)
+zuoci_client.Caption = "左慈輔助器"
+zuoci_client.Color = 0xFFC6C6
+zuoci_client.Left = 650
+zuoci_client.Top = 300
+zuoci_client.Height = 400
+zuoci_client.Width = 600
+
+-- 创建 Label - 游戏模式
+local Mode_Label = createLabel(zuoci_client)
+Mode_Label.Caption = "选择游戏模式"
+Mode_Label.Font.Size = 10
+Mode_Label.Left = 10
+Mode_Label.Top = 10
+
+-- 创建下拉菜单 - 游戏模式
+local Mode_ComboBox = createComboBox(zuoci_client)
+Mode_ComboBox.Left = Mode_Label.Left
+Mode_ComboBox.Top = Mode_Label.Top + Mode_Label.Height + 5
+Mode_ComboBox.Width = 100
+Mode_ComboBox.Items.add("普通生存")
+Mode_ComboBox.Items.add("普通創造")
+Mode_ComboBox.Items.add("極限生存")
+Mode_ComboBox.Items.add("創造生存")
+Mode_ComboBox.Items.add("編輯模式")
+Mode_ComboBox.Items.add("玩法模式")
+Mode_ComboBox.Items.add("高級生存")
+Mode_ComboBox.ItemIndex = 5
+
+-- 创建按钮用于执行选择的模式
+local Mode_Button = createButton(zuoci_client)
+Mode_Button.Caption = "修改"
+Mode_Button.Left = Mode_ComboBox.Left
+Mode_Button.Top = Mode_ComboBox.Top + Mode_ComboBox.Height + 5
+Mode_Button.Width = 100
+Mode_Button.OnClick = function()
+    local selectedModeIndex = Mode_ComboBox.ItemIndex
+    if selectedModeIndex >= 0 then
+        GameMode(selectedModeIndex)
+    else
+        showMessage("请选择一个游戏模式！")
+    end
+end
+
+-- 创建 Label - 人物姿势
+local PlayerMode_Label = createLabel(zuoci_client)
+PlayerMode_Label.Caption = "选择人物姿势"
+PlayerMode_Label.Font.Size = 10
+PlayerMode_Label.Left = 10
+PlayerMode_Label.Top = Mode_Button.Top + Mode_Button.Height + 10
+
+-- 创建下拉菜单 - 人物姿势
+local PlayerMode_ComboBox = createComboBox(zuoci_client)
+PlayerMode_ComboBox.Left = PlayerMode_Label.Left
+PlayerMode_ComboBox.Top = PlayerMode_Label.Top + PlayerMode_Label.Height + 5
+PlayerMode_ComboBox.Width = 100
+PlayerMode_ComboBox.Items.add("正常")
+PlayerMode_ComboBox.Items.add("坐下")
+PlayerMode_ComboBox.Items.add("飞行")
+PlayerMode_ComboBox.ItemIndex = 0
+
+-- 创建按钮用于执行选择的人物姿势
+local PlayerMode_Button = createButton(zuoci_client)
+PlayerMode_Button.Caption = "修改"
+PlayerMode_Button.Left = PlayerMode_ComboBox.Left
+PlayerMode_Button.Top = PlayerMode_ComboBox.Top + PlayerMode_ComboBox.Height + 5
+PlayerMode_Button.Width = 100
+PlayerMode_Button.OnClick = function()
+    local selectedModeIndex = PlayerMode_ComboBox.ItemIndex
+    if selectedModeIndex == 0 then
+        PlayerMode(0)
+    elseif selectedModeIndex == 1 then
+        PlayerMode(512)
+    elseif selectedModeIndex == 2 then
+        PlayerMode(72)
+    else
+        showMessage("请选择一个人物姿势！")
+    end
+end
+
+zuoci_client.hide()
+
+
+
+
+
+
+
+
+
+
+-- 创建表单
+local zuoci_InjectGame = createForm(true)
+zuoci_InjectGame.Caption = "注入"
+zuoci_InjectGame.Color = 0xFFACAC
+zuoci_InjectGame.Left = 750
+zuoci_InjectGame.Top = 300
+zuoci_InjectGame.Height = 400
+zuoci_InjectGame.Width = 400
+local InjectGame_Button = createButton(zuoci_InjectGame)
+InjectGame_Button.Caption = "注入遊戲"
+InjectGame_Button.Font.Size = 30
+InjectGame_Button.Left = 90
+InjectGame_Button.Top = 130
+InjectGame_Button.Width = 200
+InjectGame_Button.Height = 120
+InjectGame_Button.OnClick = function()
+    InjectGame()
+    zuoci_InjectGame.close()
+    zuoci_client.show()
+end
+
+zuoci_InjectGame.hide()
+
+
+
+
+
+
+
+
+
+-- 创建表单
+local zuoci_start = createForm(true)
+zuoci_start.Caption = "選項"
+zuoci_start.Color = 0xFFACAC
+zuoci_start.Left = 650
+zuoci_start.Top = 300
+zuoci_start.Height = 400
+zuoci_start.Width = 575
+zuoci_start.BorderStyle = "bsNone"
+-- 创建 Label
+local Start_Label = createLabel(zuoci_start)
+Start_Label.Caption = "選擇要開啟的輔助"
+Start_Label.Font.Size = 30
+Start_Label.Left = 125
+Start_Label.Top = 10
+-- 左慈輔助器
+local Start_Button_zuoci_client = createButton(zuoci_start)
+Start_Button_zuoci_client.Caption = "左慈輔助器"
+Start_Button_zuoci_client.Font.Size = 15
+Start_Button_zuoci_client.Left = 10
+Start_Button_zuoci_client.Top = 100
+Start_Button_zuoci_client.Width = 150
+Start_Button_zuoci_client.Height = 60
+local Start_Button_sky_capoo = createButton(zuoci_start)
+Start_Button_sky_capoo.Caption = "Sky Capoo"
+Start_Button_sky_capoo.Font.Size = 15
+Start_Button_sky_capoo.Left = 10
+Start_Button_sky_capoo.Top = 170
+Start_Button_sky_capoo.Width = 150
+Start_Button_sky_capoo.Height = 60
+Start_Button_zuoci_client.OnClick = function()
+    zuoci_start.close()
+    zuoci_InjectGame.show()
+end
