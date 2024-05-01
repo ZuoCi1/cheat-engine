@@ -1,3 +1,41 @@
+-- 启用功能
+local enableScript = [=[
+aobscanmodule(INJECT,libSandboxEngine.dll,F3 0F 10 46 14 8D 4D)
+alloc(newmem,$1000)
+label(code)
+label(return)
+newmem:
+mov [esi+14],(float)0
+code:
+  movss xmm0,[esi+14]
+  jmp return
+INJECT:
+  jmp newmem
+return:
+registersymbol(INJECT)
+]=]
+-- 定义函数来启用功能
+local function enable_AutiCd_script()
+    autoAssemble(enableScript)
+end
+-- 禁用功能
+local disableScript = [=[
+INJECT:
+  db F3 0F 10 46 14
+unregistersymbol(INJECT)
+dealloc(newmem)
+]=]
+-- 定义函数来禁用功能
+local function disable_AutiCd_script()
+    autoAssemble(disableScript)
+end
+
+
+
+
+
+
+
 -- 注入游戏
 function InjectGame()
     local game = "MiniGameApp.exe"
@@ -16,7 +54,6 @@ function GameMode(mode)
         showMessage("无法修改游戏模式")
     end
 end
-
 -- 修改人物姿势
 function PlayerMode(mode)
     local address = "[libSandboxEngine.g_pPlayerCtrl]+20C"
@@ -24,6 +61,8 @@ function PlayerMode(mode)
         showMessage("无法修改人物姿势")
     end
 end
+
+
 
 
 
@@ -107,8 +146,26 @@ PlayerMode_Button.OnClick = function()
         showMessage("请选择一个人物姿势！")
     end
 end
+local AutiCd_CheckBox = createCheckBox(zuoci_client)
+AutiCd_CheckBox.Caption = "無冷卻"
+AutiCd_CheckBox.Font.Size = 10
+AutiCd_CheckBox.Left = Mode_Label.Left + Mode_Label.Width + 40
+AutiCd_CheckBox.Top = 10
+-- 按钮点击事件处理
+AutiCd_CheckBox.OnClick = function()
+    if AutiCd_CheckBox.Checked then
+        enable_AutiCd_script()
+    else
+        disable_AutiCd_script()
+    end
+end
 
-zuoci_client.hide()
+
+
+
+
+
+--zuoci_client.hide()
 
 
 
@@ -184,3 +241,5 @@ Start_Button_zuoci_client.OnClick = function()
     zuoci_start.close()
     zuoci_InjectGame.show()
 end
+
+zuoci_start.hide()
